@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 78数据库用户工时统计定时任务-->
+    <bean id="userWorkHourSchedule" class="com.escst.socket.schedule.UserWorkHourSchedule" />
+    <!--配置调度具体执行的方法-->
+    <bean id="userWorkHourDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="userWorkHourSchedule" />
+        <property name="targetMethod" value="userWorkHourTask" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <!--配置调度执行的触发的时间-->
+    <bean id="userWorkHourTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="userWorkHourDetail" />
+        <property name="cronExpression">
+            <!-- 每天凌晨一点执行任务调度 -->
+            <value>0 0 1 * * ?</value>
+            <!--<value>0 0/1 * * * ?</value>-->
+        </property>
+    </bean>
+
+    <!-- 99数据库用户工时统计定时任务-->
+    <bean id="userWorkHourSchedule99" class="com.escst.socket.schedule.UserWorkHourSchedule99" />
+    <!--配置调度具体执行的方法-->
+    <bean id="userWorkHourDetail99"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="userWorkHourSchedule99" />
+        <property name="targetMethod" value="userWorkHourTask" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <!--配置调度执行的触发的时间-->
+    <bean id="userWorkHourTrigger99" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="userWorkHourDetail99" />
+        <property name="cronExpression">
+            <!-- 每天凌晨一点执行任务调度 -->
+            <value>0 0 0 * * ?</value>
+            <!--<value>0 0/1 * * * ?</value>-->
+        </property>
+    </bean>
+
+    <!--用户未打卡提醒推送定时任务-->
+    <bean id="userRecogPushSchedule" class="com.escst.socket.schedule.UserRecogPushSchedule" />
+    <!--配置调度具体执行的方法-->
+    <bean id="userRecogPushDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="userRecogPushSchedule" />
+        <property name="targetMethod" value="userRecogTask" />
+        <property name="concurrent" value="false" />
+    </bean>
+    <!--配置调度执行的触发的时间-->
+    <bean id="userRecogPushTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="userRecogPushDetail" />
+        <property name="cronExpression">
+            <!-- 每天凌晨零点执行任务调度 -->
+            <value>0 0 0 * * ?</value>
+            <!--<value>0 0/1 * * * ?</value>-->
+        </property>
+    </bean>
+
+    <!-- quartz的调度工厂 调度工厂只能有一个，多个调度任务在list中添加 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <!-- 所有的调度列表-->
+                <ref local="userWorkHourTrigger" />
+                <ref local="userWorkHourTrigger99" />
+                <ref local="userRecogPushTrigger" />
+            </list>
+        </property>
+    </bean>
+</beans>
