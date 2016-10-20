@@ -38,16 +38,22 @@ public class AfterSpringInit implements InitializingBean{
 
     @Inject
     private DeviceTaskDao deviceTaskDao;
+
     @Inject
     private UserInfoRecordsDao userInfoRecordsDao;
+
     @Inject
     private RegisterUserInfoDao registerUserInfoDao;
+
     @Inject
     private EnvorimentDBDao envorimentDBDao;
+
     @Inject
     private TowerDBDao towerDBDao;
+
     @Inject
     private LiftDao liftDao;
+
 	@Inject
 	private PropellingMovementDBDao propellingMovementDBDao;
 
